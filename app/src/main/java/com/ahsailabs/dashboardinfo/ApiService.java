@@ -2,6 +2,7 @@ package com.ahsailabs.dashboardinfo;
 
 
 import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -20,4 +21,14 @@ public interface ApiService {
     @Multipart
     @POST("save_WL")
     Call<SaveWLResponse> saveWL(@Part MultipartBody.Part partFile);
+
+    //tools_avaibility_pic, team_avaibility_pic, team_avaibility, tools_avaibility, space_avaibility, progress_status
+
+    @Multipart
+    @POST("save_evidence")
+    Call<SaveEvidenceResponse> saveEvidence(@Part MultipartBody.Part partFile1, @Part MultipartBody.Part partFile2,
+                                            @Part("team_avaibility") RequestBody teamAvaibility,
+                                            @Part("tools_avaibility") RequestBody toolsAvaibility,
+                                            @Part("space_avaibility") RequestBody spaceAvaibility,
+                                            @Part("progress_status") RequestBody progressAvaibility);
 }
