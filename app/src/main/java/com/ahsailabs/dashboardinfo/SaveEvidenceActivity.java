@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -15,13 +16,21 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+import androidx.exifinterface.media.ExifInterface;
 
 import com.ahsailabs.dashboardinfo.databinding.ActivitySaveEvidenceBinding;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -47,12 +56,13 @@ public class SaveEvidenceActivity extends AppCompatActivity {
             Toast.makeText(this, "uri : "+result, Toast.LENGTH_SHORT).show();
             fileUri1 = result;
             binding.iv1.setImageURI(result);
+            showMetaInfo(fileUri1);
         });
 
         ActivityResultLauncher<Uri> openCamLauncher = registerForActivityResult(new ActivityResultContracts.TakePicture(), result -> {
-            //Toast.makeText(this, "uri : "+result, Toast.LENGTH_SHORT).show();
             if (result) {
                 binding.iv1.setImageURI(fileUri1);
+                showMetaInfo(fileUri1);
             }
         });
 
@@ -60,6 +70,7 @@ public class SaveEvidenceActivity extends AppCompatActivity {
             Toast.makeText(this, "uri : "+result, Toast.LENGTH_SHORT).show();
             fileUri2 = result;
             binding.iv2.setImageURI(result);
+            showMetaInfo(fileUri2);
         });
 
 
@@ -70,7 +81,6 @@ public class SaveEvidenceActivity extends AppCompatActivity {
                 //openDocLauncher.launch(new String[]{"image/png", "image/jpg"});
                 try {
                     File file = File.createTempFile("test", ".png", getCacheDir());
-                    //fileUri1 = Uri.fromFile(file);
                     fileUri1 = FileProvider.getUriForFile(getApplicationContext(), BuildConfig.APPLICATION_ID+".provider", file);
                     openCamLauncher.launch(fileUri1);
                 } catch (IOException e) {
@@ -181,5 +191,36 @@ public class SaveEvidenceActivity extends AppCompatActivity {
 
     private RequestBody getStringPart(String info){
         return RequestBody.create(MediaType.parse("text/plain"), info);
+    }
+
+
+    private void showMetaInfo(Uri uri){
+        if (uri != null) {
+            try {
+                InputStream is = getContentResolver().openInputStream(uri);
+                ExifInterface exifInterface = new ExifInterface(is);
+                double[] latlng = exifInterface.getLatLong();
+                if (latlng != null) {
+                    Log.d("ahmad", "lat long gambar : "+latlng[0]+"/"+ latlng[1]);
+                }
+
+                Long gpsTime = exifInterface.getGpsDateTime();
+                if (gpsTime != null) {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.getDefault());
+                    Date date = new Date();
+                    date.setTime(exifInterface.getGpsDateTime());
+                    Log.d("ahmad", "date time gambar : " + dateFormat.format(date));
+                }
+
+                if(exifInterface.hasThumbnail()){
+                    Log.d("ahmad", "ada thumbnail gambar");
+                }
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
