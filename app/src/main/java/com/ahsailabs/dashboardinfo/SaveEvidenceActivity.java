@@ -1,7 +1,10 @@
 package com.ahsailabs.dashboardinfo;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
@@ -11,10 +14,12 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 import com.ahsailabs.dashboardinfo.databinding.ActivitySaveEvidenceBinding;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -44,6 +49,13 @@ public class SaveEvidenceActivity extends AppCompatActivity {
             binding.iv1.setImageURI(result);
         });
 
+        ActivityResultLauncher<Uri> openCamLauncher = registerForActivityResult(new ActivityResultContracts.TakePicture(), result -> {
+            //Toast.makeText(this, "uri : "+result, Toast.LENGTH_SHORT).show();
+            if (result) {
+                binding.iv1.setImageURI(fileUri1);
+            }
+        });
+
         ActivityResultLauncher<String[]> openDoc2Launcher = registerForActivityResult(new ActivityResultContracts.OpenDocument(), result -> {
             Toast.makeText(this, "uri : "+result, Toast.LENGTH_SHORT).show();
             fileUri2 = result;
@@ -55,7 +67,15 @@ public class SaveEvidenceActivity extends AppCompatActivity {
         binding.btn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openDocLauncher.launch(new String[]{"image/png", "image/jpg"});
+                //openDocLauncher.launch(new String[]{"image/png", "image/jpg"});
+                try {
+                    File file = File.createTempFile("test", ".png", getCacheDir());
+                    //fileUri1 = Uri.fromFile(file);
+                    fileUri1 = FileProvider.getUriForFile(getApplicationContext(), BuildConfig.APPLICATION_ID+".provider", file);
+                    openCamLauncher.launch(fileUri1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -82,6 +102,9 @@ public class SaveEvidenceActivity extends AppCompatActivity {
                 }
             }
         });
+
+        SharedPreferences sharedPreferences = getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
+        String username = sharedPreferences.getString("", "");
 
     }
 

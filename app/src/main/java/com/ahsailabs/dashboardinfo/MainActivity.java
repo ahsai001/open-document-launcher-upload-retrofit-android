@@ -2,6 +2,8 @@ package com.ahsailabs.dashboardinfo;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -54,6 +56,11 @@ public class MainActivity extends AppCompatActivity {
                 LoginResponse loginResponse = response.body();
 
                 //saving login respose to database persistent
+                SharedPreferences sharedPreferences = getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt("", 10);
+                editor.putString("", "");
+                editor.apply();
 
 
                 //go to next page

@@ -3,9 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="RecylerTable/src/main/res/layout/main_layout.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_fixed_header_column_table.xml" value="0.22708333333333333" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.21770833333333334" />
         <entry key="app/src/main/res/layout/activity_save_evidence.xml" value="0.21770833333333334" />
         <entry key="app/src/main/res/layout/activity_save_wlactivity.xml" value="0.21770833333333334" />
+        <entry key="app/src/main/res/xml/provider_paths.xml" value="0.1046875" />
       </map>
     </option>
   </component>
