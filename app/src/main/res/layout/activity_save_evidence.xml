@@ -39,8 +39,10 @@
             android:text="pilih gambar 1"/>
         <ImageView
             android:id="@+id/iv1"
-            android:layout_width="100dp"
-            android:layout_height="100dp"/>
+            android:scaleType="fitXY"
+            android:adjustViewBounds="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
         <Button
             android:id="@+id/btn2"
             android:layout_width="wrap_content"
@@ -48,8 +50,10 @@
             android:text="pilih gambar 2"/>
         <ImageView
             android:id="@+id/iv2"
-            android:layout_width="100dp"
-            android:layout_height="100dp"/>
+            android:scaleType="fitXY"
+            android:adjustViewBounds="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
         <Button
             android:id="@+id/btnSubmit"
             android:layout_width="wrap_content"

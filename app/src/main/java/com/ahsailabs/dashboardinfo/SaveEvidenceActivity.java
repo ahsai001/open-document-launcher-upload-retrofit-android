@@ -214,6 +214,7 @@ public class SaveEvidenceActivity extends AppCompatActivity {
 
                 if(exifInterface.hasThumbnail()){
                     Log.d("ahmad", "ada thumbnail gambar");
+                    //binding.iv1.setImageBitmap(exifInterface.getThumbnailBitmap());
                 }
 
             } catch (FileNotFoundException e) {
